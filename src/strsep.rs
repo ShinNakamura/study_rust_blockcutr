@@ -1,6 +1,6 @@
 pub fn blockcutr(src: &str, sep: &str, blockn: usize) -> Option<String> {
     let blocks: Vec<&str> = src.split(sep).collect();
-    if blocks.len() < blockn {
+    if blocks.len() - 1 < blockn {
         None
     } else {
         let blk = blocks[blockn].trim();
@@ -23,7 +23,7 @@ fn t1() {
     assert_eq!(expect1, blockcutr(&src, &sep, 0).unwrap());
     assert_eq!(expect2, blockcutr(&src, &sep, 1).unwrap());
     assert_eq!(expect3, blockcutr(&src, &sep, 2).unwrap());
-    assert_eq!(None, blockcutr(&src, &sep, 55));
+    assert_eq!(None, blockcutr(&src, &sep, 3));
 }
 
 #[test]

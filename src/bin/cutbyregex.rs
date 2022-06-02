@@ -1,5 +1,5 @@
 use std::io::prelude::*;
-use blockcutr::strsep;
+use blockcutr::regexsep;
 
 fn main() {
     if let Err(e) = run() {
@@ -24,7 +24,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         src.push_str(&line);
         line.clear();
     }
-    if let Some(block) = strsep::blockcutr(&src, sep, blockn) {
+    if let Some(block) = regexsep::blockcutr(&src, sep, blockn) {
         let out = std::io::stdout();
         let mut out = std::io::BufWriter::new(out.lock());
         write!(out, "{}", block)?;
