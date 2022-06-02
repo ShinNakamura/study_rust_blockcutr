@@ -2,29 +2,34 @@
 // https://docs.rs/regex/latest/regex/#grouping-and-flags
 use regex::Regex;
 
+// blockn に指定された部分があればトリムして返す
 pub fn blockcutr(src: &str, sep: &str, blockn: usize) -> Option<String> {
     let sep = Regex::new(sep).expect("Invalid regex");
     let blocks = split_pos_keep(&sep, src);
     if blocks.len() - 1 < blockn {
         None
     } else {
-        let blk = blocks[blockn].trim();
-        Some(blk.to_string())
+        let (spos, epos) = blocks[blockn];
+        let s = src[spos..epos].trim().to_string();
+        Some(s)
     }
 }
 
-fn split_pos_keep(r: &Regex, text: &str) -> Vec<String> {
+// regex にヒットした部分をセパレータにして、
+// セパレータの前後の部分(＝セパレータは含まない)の開始位置と終了位置が
+// タプルになっているもののベクターを返す
+fn split_pos_keep(r: &Regex, text: &str) -> Vec<(usize, usize)> {
     let mut splits = Vec::new();
     let mut last_index = 0;
     for mat in r.find_iter(text) {
         let index = mat.start();
         if last_index != index {
-            splits.push(text[last_index..index].to_string());
+            splits.push((last_index, index));
         }
         last_index = mat.end();
     }
     if last_index < text.len() {
-        splits.push(text[last_index..].to_string());
+        splits.push((last_index, text.len()));
     }
     splits
 }
@@ -37,8 +42,12 @@ fn split_by_rgx() {
     <p>met Mary</p>
     <hr />"#;
     let splits = split_pos_keep(&sep, text);
-    assert_eq!(splits[0].trim(), "<h1>Harry</h1>".to_string());
-    assert_eq!(splits[1].trim(), "<p>met Mary</p>".to_string());
+    let (spos, epos) = splits[0];
+    let s = text[spos..epos].trim().to_string();
+    assert_eq!(s, "<h1>Harry</h1>".to_string());
+    let (spos, epos) = splits[1];
+    let s = text[spos..epos].trim().to_string();
+    assert_eq!(s, "<p>met Mary</p>".to_string());
 }
 
 #[test]
