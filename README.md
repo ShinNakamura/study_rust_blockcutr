@@ -70,4 +70,15 @@ expect="aaa"
 echo " xxx <br />    aaa   <BR>oooo" | cargo run --bin $bin -- '(?i)<br[^>]*?>' 1
 # aaa
 ```
+### Windows (git-bash)
 
+Windows の git-bash では、引数文字列内にスラッシュ`/`があると裏で補完が走って Linux の bash のように素直には解釈されない。
+
+これを回避するために `MSYS_NO_PATHCONV=1` をセットする。
+
+```sh
+MSYS_NO_PATHCONV=1 cargo run --bin cutbystr -- '</div>' 1 <tests/src.html
+# この中の `</div>` の部分をそのままの文字列としてシェルに解釈させる
+```
+
+参考 : [git for Windows の git grep でスラッシュ始まりの文字列を検索すると必ずヒットしなくなる](https://qiita.com/tsubasaogawa/items/93722bd4769ff87a8099)
