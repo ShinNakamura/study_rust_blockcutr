@@ -8,6 +8,20 @@ pub fn blockcutr(src: &str, sep: &str, blockn: usize) -> Option<String> {
     }
 }
 
+pub fn blockcutr_once(src: &str, sep: &str, blockn: usize) -> Option<String> {
+    if let Some(blocks) = src.split_once(sep) {
+        if blockn == 0 {
+            Some(blocks.0.trim().to_string())
+        } else if blockn == 1 {
+            Some(blocks.1.trim().to_string())
+        } else {
+            None
+        }
+    } else {
+        None
+    }
+}
+
 #[test]
 fn t1() {
     let src = r#"aaa
